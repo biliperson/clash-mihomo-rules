@@ -21,7 +21,6 @@ payload:
   - DOMAIN-SUFFIX,notebooklm.google.com
   - DOMAIN-SUFFIX,one.google.com
   - DOMAIN-SUFFIX,proactivebackend-pa.googleapis.com
-
   - DOMAIN,aida.googleapis.com
   - DOMAIN,alkali.googleapis.com
   - DOMAIN,alkalicore-pa.clients6.google.com
@@ -39,7 +38,6 @@ payload:
   - DOMAIN,speech.googleapis.com
   - DOMAIN,texttospeech.googleapis.com
   - DOMAIN,waa-pa.clients6.google.com
-
   - PROCESS-NAME,Antigravity.exe
   - PROCESS-NAME,gemini-cli.exe
   - PROCESS-NAME,gemini.exe
