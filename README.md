@@ -37,14 +37,3 @@ https://ghproxy.net/
 谁、如何转换的:
 开源社区开发者（如基于 hunshcn/gh-proxy 项目搭建的各路公益节点）。这些服务通常部署在 Cloudflare Workers 或海外自建 VPS（Nginx 反向代理）上。它充当了一个“中间人”——国内用户向 GHProxy 的服务器发送请求，GHProxy 服务器在海外不受限的网络环境中下载原 GitHub 文件，再以数据流的形式原样返回给国内用户。
 
-3. GitMirror (直接域名替换)
-转换后的链接:
-
-https://raw.gitmirror.com/biliperson/clash-mihomo-rules/refs/heads/main/clash/gemini.yaml
-
-转换的规则:
-保持原链接的所有路径结构不变，仅替换域名：
-将 raw.githubusercontent.com 直接替换为 raw.gitmirror.com。
-
-谁、如何转换的:
-GitMirror 公益社区。他们在海外服务器配置了针对 GitHub 各大域名的强制路由重写。底层的实现依然是反向代理，但通过保持与官方完全一致的 URL 路径结构，极大地方便了脚本和客户端的批量替换（只需做一个全局字符串替换操作），用户端通过 GitMirror 尚未被封锁的域名和 IP 与海外服务器建立连接，获取规则文件。
