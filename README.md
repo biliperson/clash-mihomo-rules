@@ -10,6 +10,7 @@ https://raw.githubusercontent.com/biliperson/clash-mihomo-rules/refs/heads/main/
 转换后的链接:
 
 https://testingcf.jsdelivr.net/gh/biliperson/clash-mihomo-rules@main/clash/gemini.yaml
+
 (也可以将 testingcf 替换为 cdn 或 fastly)
 
 转换的规则:
@@ -25,6 +26,7 @@ jsDelivr 是一家提供公共免费 CDN 服务的平台。当用户请求上述
 转换后的链接:
 
 https://ghproxy.net/https://raw.githubusercontent.com/biliperson/clash-mihomo-rules/refs/heads/main/clash/gemini.yaml
+
 (备用域名：[https://mirror.ghproxy.com/]
 
 转换的规则:
