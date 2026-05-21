@@ -41,3 +41,4 @@ payload:
   - PROCESS-NAME,Antigravity.exe
   - PROCESS-NAME,gemini-cli.exe
   - PROCESS-NAME,gemini.exe
+  - PROCESS-NAME,language_server_windows_x64.exe
