@@ -27,7 +27,7 @@ jsDelivr 是一家提供公共免费 CDN 服务的平台。当用户请求上述
 
 https://ghproxy.net/https://raw.githubusercontent.com/biliperson/clash-mihomo-rules/refs/heads/main/clash/gemini.yaml
 
-(备用域名：[https://mirror.ghproxy.com/]
+(备用域名：https://mirror.ghproxy.com/
 
 转换的规则:
 直接在原完整链接前方拼接代理网址：
