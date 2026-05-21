@@ -1,12 +1,14 @@
 # clash-mihomo-rules
-原链接
+
 原始链接: 
+
 https://raw.githubusercontent.com/biliperson/clash-mihomo-rules/refs/heads/main/clash/gemini.yaml
 
 针对 raw.githubusercontent.com 在国内经常遭到 DNS 污染或 SNI 阻断导致无法拉取规则的问题，以下是几个常用的国内加速/反向代理（镜像）转换方案，并附带转换后的实际链接及解析。
 
 1. jsDelivr (以 testingcf/fastly 节点为例)
 转换后的链接:
+
 https://testingcf.jsdelivr.net/gh/biliperson/clash-mihomo-rules@main/clash/gemini.yaml
 (也可以将 testingcf 替换为 cdn 或 fastly)
 
@@ -21,6 +23,7 @@ jsDelivr 是一家提供公共免费 CDN 服务的平台。当用户请求上述
 
 2. GHProxy (通用 GitHub 代理)
 转换后的链接:
+
 https://ghproxy.net/https://raw.githubusercontent.com/biliperson/clash-mihomo-rules/refs/heads/main/clash/gemini.yaml
 (备用域名：[https://mirror.ghproxy.com/]
 
@@ -34,6 +37,7 @@ https://ghproxy.net/
 
 3. GitMirror (直接域名替换)
 转换后的链接:
+
 https://raw.gitmirror.com/biliperson/clash-mihomo-rules/refs/heads/main/clash/gemini.yaml
 
 转换的规则:
