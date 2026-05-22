@@ -1,4 +1,5 @@
 # NAME: Gemini
+# NOTE: gggg
 payload:
   - DOMAIN-SUFFIX,ai.google
   - DOMAIN-SUFFIX,ai.google.dev
