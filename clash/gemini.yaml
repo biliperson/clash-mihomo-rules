@@ -1,5 +1,6 @@
 # NAME: Gemini
 # NOTE: 2026-05-29
+# NOTE: update
 payload:
   - DOMAIN-SUFFIX,ai.google
   - DOMAIN-SUFFIX,ai.google.dev
