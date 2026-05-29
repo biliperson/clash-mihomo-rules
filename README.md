@@ -6,7 +6,7 @@ https://raw.githubusercontent.com/biliperson/clash-mihomo-rules/refs/heads/main/
 
 针对 raw.githubusercontent.com 在国内经常遭到 DNS 污染或 SNI 阻断导致无法拉取规则的问题，以下是几个常用的国内加速/反向代理（镜像）转换方案，并附带转换后的实际链接及解析。
 
-1.1 jsDelivr (以 testingcf/fastly 节点为例)
+1.1 jsDelivr (以 testingcf/fastly 节点为例) 24h延迟
 转换后的链接:
 
 https://testingcf.jsdelivr.net/gh/biliperson/clash-mihomo-rules@main/clash/gemini.yaml
