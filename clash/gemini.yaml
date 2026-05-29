@@ -1,11 +1,12 @@
 # NAME: Gemini
-# NOTE: gggg
+# NOTE: 2026-05-29
 payload:
   - DOMAIN-SUFFIX,ai.google
   - DOMAIN-SUFFIX,ai.google.dev
   - DOMAIN-SUFFIX,aiplatform.googleapis.com
   - DOMAIN-SUFFIX,aistudio.google.com
   - DOMAIN-SUFFIX,antigravity-unleash.goog
+  - DOMAIN-SUFFIX,antigravity.google
   - DOMAIN-SUFFIX,deepmind.com
   - DOMAIN-SUFFIX,deepmind.google
   - DOMAIN-SUFFIX,gemini.google.com
@@ -22,6 +23,7 @@ payload:
   - DOMAIN-SUFFIX,notebooklm.google.com
   - DOMAIN-SUFFIX,one.google.com
   - DOMAIN-SUFFIX,proactivebackend-pa.googleapis.com
+  - DOMAIN,lh3.googleusercontent.com
   - DOMAIN,aida.googleapis.com
   - DOMAIN,alkali.googleapis.com
   - DOMAIN,alkalicore-pa.clients6.google.com
@@ -44,3 +46,4 @@ payload:
   - PROCESS-NAME,gemini-cli.exe
   - PROCESS-NAME,gemini.exe
   - PROCESS-NAME,language_server_windows_x64.exe
+  - PROCESS-NAME,language_server.exe
