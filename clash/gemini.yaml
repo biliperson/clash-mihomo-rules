@@ -40,6 +40,7 @@ payload:
   - DOMAIN,texttospeech.googleapis.com
   - DOMAIN,waa-pa.clients6.google.com
   - PROCESS-NAME,Antigravity.exe
+  - PROCESS-NAME,Antigravity IDE.exe
   - PROCESS-NAME,gemini-cli.exe
   - PROCESS-NAME,gemini.exe
   - PROCESS-NAME,language_server_windows_x64.exe
