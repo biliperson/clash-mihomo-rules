@@ -1,0 +1,701 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ *  ✦  Clash Verge Rev — 赛博翠绿荧光主题  ✦
+ *  ✦  浅色 / 深色 双模自动适配版          ✦
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ *  【设计哲学】
+ *  以淡绿荧光(LightGreen/SeaGreen)为核心强调色，搭配浅灰或暗灰底色，
+ *  通过 box-shadow 渲染赛博朋克式的发光边框，配合微交互动画（悬浮上浮、
+ *  阴影递进）营造极简赛博美学。
+ *
+ *  【双模适配原理】
+ *  Clash Verge Rev 在切换浅色/深色主题时，最外层 MuiPaper 容器的 CSS
+ *  哈希类名会发生变化：
+ *    - 浅色模式：.css-1li7dvq
+ *    - 深色模式：.css-l3ykv8
+ *  本 CSS 利用这一特性，在两个容器类名上分别挂载一组 CSS 自定义属性
+ *  （设计令牌），所有子元素通过 var(--cvr-xxx) 引用令牌值，从而实现
+ *  一套规则、两套配色的自动切换，不产生任何冲突。
+ *
+ *  【绿色系色彩体系】
+ *  ┌───────────────────┬──────────────────────────┬──────────────────────────┐
+ *  │ 语义              │ 浅色模式                 │ 深色模式                 │
+ *  ├───────────────────┼──────────────────────────┼──────────────────────────┤
+ *  │ 卡片底色          │ #f5f5f5                  │ #35374a                  │
+ *  │ 边框绿            │ rgba(144,238,144, 0.8)   │ rgba(144,238,144, 0.65)  │
+ *  │ 发光绿            │ rgba(144,238,144, 0.6)   │ rgba(144,238,144, 0.45)  │
+ *  │ 强调文字绿        │ #2e8b57 (海绿)           │ #54d693 (薄荷绿)         │
+ *  │ 选中指示条绿      │ #54d693                  │ #54d693                  │
+ *  │ 淡绿背景          │ rgba(144,238,144, 0.2)   │ rgba(144,238,144, 0.12)  │
+ *  │ 弱化文字          │ #808080                  │ #9e9e9e                  │
+ *  │ 输入框底色        │ #f5f5f5                  │ #2f3145                  │
+ *  │ 对话框底色        │ #f5f5f5                  │ #2E303D                  │
+ *  │ 悬浮阴影          │ rgba(0,0,0, 0.08)        │ rgba(0,0,0, 0.30)        │
+ *  └───────────────────┴──────────────────────────┴──────────────────────────┘
+ *
+ *  【注意事项】
+ *  所有 MUI 散列类名（如 .css-rbmxes, .css-ulr2qx 等）可能随 Clash Verge Rev
+ *  版本更新而变化。若升级后样式失效，需重新审查 DOM 并更新对应的哈希类名。
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+
+/* ╔═══════════════════════════════════════════════════════════════════════════╗
+ * ║  区块 A：设计令牌（CSS Custom Properties）                              ║
+ * ║  ——将所有与"主题颜色"相关的值集中在此处，便于日后一键换色——              ║
+ * ╚═══════════════════════════════════════════════════════════════════════════╝ */
+
+/* =========================================================================
+ * 0-A. 设计令牌 — 浅色模式
+ * （挂载于浅色模式的最外层容器 .css-1li7dvq，所有子元素自动继承这些变量）
+ * ========================================================================= */
+.css-1li7dvq {
+    /* ── 卡片与面板 ── */
+    --cvr-card-bg: #f5f5f5;
+    /* 所有卡片、面板的统一底色（护眼浅灰） */
+    --cvr-input-bg: #f5f5f5;
+    /* 输入框底色，与卡片一致 */
+    --cvr-dialog-bg: #f5f5f5;
+    /* 弹窗对话框底色（纯白） */
+
+    /* ── 边框与发光 ── */
+    --cvr-border: rgba(144, 238, 144, 0.8);
+    /* 赛博绿荧光边框（高饱和半透明） */
+    --cvr-glow: rgba(144, 238, 144, 0.6);
+    /* 赛博绿外发光阴影 */
+    --cvr-node-inset: rgba(144, 238, 144, 0.8);
+    /* 选中节点的内描边发光 */
+    --cvr-node-glow: rgba(144, 238, 144, 0.7);
+    /* 选中节点的外围荧光 */
+
+    /* ── 强调色（绿色系） ── */
+    --cvr-accent: #2e8b57;
+    /* 强调文字/图标色（海绿色） */
+    --cvr-accent-indicator: #54d693;
+    /* 选中指示条色（薄荷绿） */
+    --cvr-accent-bg: rgba(144, 238, 144, 0.2);
+    /* 选中/激活态的淡绿背景填充 */
+
+    /* ── 进度条 ── */
+    --cvr-progress-track: rgba(144, 238, 144, 0.2);
+    /* 进度条底轨（极淡绿） */
+    --cvr-progress-bar: #2e8b57;
+    /* 进度条实际进度（深绿） */
+
+    /* ── 开关组件 ── */
+    --cvr-switch-track: #2e8b57;
+    /* 开关轨道色（海绿） */
+    --cvr-switch-opacity: 0.5;
+    /* 开关轨道透明度 */
+
+    /* ── 文字与辅助色 ── */
+    --cvr-text-muted: #808080;
+    /* 弱化/次要文字色 */
+
+    /* ── 阴影 ── */
+    --cvr-hover-shadow: rgba(0, 0, 0, 0.08);
+    /* 普通悬浮阴影 */
+
+    /* ── 背景穿透 ── */
+    --cvr-bg-clear: rgba(255, 255, 255, 0);
+    /* 透明底色（露出大背景） */
+
+    /* ── 滚动条 ── */
+    --cvr-scroll-thumb: rgba(0, 0, 0, 0.15);
+    /* 滚动条滑块 */
+    --cvr-scroll-hover: rgba(0, 0, 0, 0.25);
+    /* 滚动条滑块悬浮态 */
+
+    /* ── 分割线 ── */
+    --cvr-divider: rgba(0, 0, 0, 0.06);
+    /* 列表分割线 */
+}
+
+/* =========================================================================
+ * 0-B. 设计令牌 — 深色模式
+ * （挂载于深色模式的最外层容器 .css-l3ykv8，同样的变量名、不同的色值）
+ * 【设计意图】绿色系色调完全沿用浅色模式（同一家族），仅对亮度和透明度
+ *   做必要微调，以确保在暗底上的可读性和视觉舒适度。
+ * ========================================================================= */
+.css-l3ykv8 {
+    /* ── 卡片与面板 ── */
+    --cvr-card-bg: #35374a;
+    /* 暗灰蓝底色（比基底 #2E303D 稍亮，制造卡片浮起感） */
+    --cvr-input-bg: #2f3145;
+    /* 输入框底色（比卡片底色再暗半阶，形成凹陷感） */
+    --cvr-dialog-bg: #2E303D;
+    /* 弹窗底色（与全局基底一致） */
+
+    /* ── 边框与发光 ── */
+    --cvr-border: rgba(144, 238, 144, 0.65);
+    /* 绿色边框（暗底上稍微降低不透明度，避免刺眼） */
+    --cvr-glow: rgba(144, 238, 144, 0.45);
+    /* 外发光（暗底上降低强度，保持柔和） */
+    --cvr-node-inset: rgba(144, 238, 144, 0.7);
+    /* 节点内描边（与浅色略降） */
+    --cvr-node-glow: rgba(144, 238, 144, 0.5);
+    /* 节点外围荧光（适度收敛） */
+
+    /* ── 强调色（绿色系） ── */
+    --cvr-accent: #54d693;
+    /* 强调文字色（薄荷绿，在暗底上更亮更易读） */
+    --cvr-accent-indicator: #54d693;
+    /* 选中指示条（与浅色一致） */
+    --cvr-accent-bg: rgba(144, 238, 144, 0.12);
+    /* 淡绿背景（暗底上降低透明度，防止过于扎眼） */
+
+    /* ── 进度条 ── */
+    --cvr-progress-track: rgba(144, 238, 144, 0.12);
+    /* 底轨（暗底上更低透明度） */
+    --cvr-progress-bar: #54d693;
+    /* 进度块（薄荷绿，暗底上辨识度高） */
+
+    /* ── 开关组件 ── */
+    --cvr-switch-track: #2e8b57;
+    /* 轨道色（与浅色一致） */
+    --cvr-switch-opacity: 0.65;
+    /* 轨道透明度（暗底上稍微提高，增强可见性） */
+
+    /* ── 文字与辅助色 ── */
+    --cvr-text-muted: #9e9e9e;
+    /* 弱化文字（暗底上提亮以保持可读） */
+
+    /* ── 阴影 ── */
+    --cvr-hover-shadow: rgba(0, 0, 0, 0.30);
+    /* 悬浮阴影（暗底上需更深才能感知） */
+
+    /* ── 背景穿透 ── */
+    --cvr-bg-clear: rgba(0, 0, 0, 0);
+    /* 透明底色（暗系基色方向） */
+
+    /* ── 滚动条 ── */
+    --cvr-scroll-thumb: rgba(255, 255, 255, 0.15);
+    /* 滚动条滑块（白系半透明） */
+    --cvr-scroll-hover: rgba(255, 255, 255, 0.30);
+    /* 滚动条滑块悬浮态 */
+
+    /* ── 分割线 ── */
+    --cvr-divider: rgba(255, 255, 255, 0.06);
+    /* 列表分割线（白系微弱线条） */
+}
+
+
+/* ╔═══════════════════════════════════════════════════════════════════════════╗
+ * ║  区块 B：通用样式层（原有规则 + 变量引用化改造）                         ║
+ * ║  ——所有颜色值均通过 var(--cvr-xxx) 引用令牌，不再硬编码——                ║
+ * ╚═══════════════════════════════════════════════════════════════════════════╝ */
+
+
+/* =========================================================================
+ * 1. 全局主容器：顶部主面板区块
+ * （承载应用最上方的状态栏、导航菜单及核心操作区内容，通过 clip-path 处理边缘发光）
+ * ========================================================================= */
+.css-rbmxes {
+    background-color: var(--cvr-card-bg) !important;
+    border: 1px solid var(--cvr-border) !important;
+    border-bottom: none !important;
+    border-radius: 8px 8px 0 0 !important;
+    /* 恢复单层发光，使用 clip-path 一刀切除底部溢出的发光，彻底斩断绿线 */
+    box-shadow: 0 0 4px var(--cvr-glow) !important;
+    clip-path: inset(-10px -10px 0 -10px) !important;
+    margin-bottom: 0 !important;
+}
+
+/* =========================================================================
+ * 2. 全局主容器：底部状态栏区块
+ * （承载应用界面最底部的流量、速度等兜底信息及全局状态展示区）
+ * ========================================================================= */
+.css-1frdjpe {
+    background-color: var(--cvr-card-bg) !important;
+    border: 1px solid var(--cvr-border) !important;
+    border-top: none !important;
+    border-radius: 0 0 8px 8px !important;
+    /* 恢复单层发光，使用 clip-path 一刀切除顶部溢出的发光 */
+    box-shadow: 0 0 4px var(--cvr-glow) !important;
+    clip-path: inset(0 -10px -10px -10px) !important;
+    /* 向上偏移 1px 强行闭合，覆盖由浏览器亚像素渲染导致的 1px 细线缝隙 */
+    margin-top: -1px !important;
+}
+
+/* =========================================================================
+ * 3. 全局代理节点分组/选择入口卡片（如：顶部的"节点选择 ✧"控制面板）
+ * （该入口卡片作为独立选项区块，需始终保持高亮的灰底绿边发光样式）
+ * ========================================================================= */
+.css-ulr2qx {
+    background-color: var(--cvr-card-bg) !important;
+    border: 1px solid var(--cvr-border) !important;
+    box-shadow: 0 0 4px var(--cvr-glow) !important;
+    border-radius: 8px !important;
+}
+
+/* =========================================================================
+ * 3-B. 设置页功能区块标题卡片（如："网络设置"标题栏）
+ * 【边界考量】此卡片是上下两块拼合结构的"上块"——底部必须切平(0px圆角)
+ *   并去除底部边框线，才能与下方的内容块无缝对接，避免出现视觉断裂。
+ * ========================================================================= */
+.css-1ustxq {
+    background-color: var(--cvr-card-bg) !important;
+    border: 1px solid var(--cvr-border) !important;
+    border-bottom: none !important;
+    box-shadow: 0 0 4px var(--cvr-glow) !important;
+    /* 仅顶部圆角，底部切平以与下方内容块严丝合缝 */
+    border-radius: 8px 8px 0 0 !important;
+    clip-path: inset(-10px -10px 0 -10px) !important;
+}
+
+/* =========================================================================
+ * 4. 订阅容器与分组卡片项目（如：极速机场、各大订阅源容器）
+ * （使用通用属性选择器 [aria-selected]，无视哈希类名，泛用于各类资源分组卡片）
+ * ========================================================================= */
+.MuiBox-root[aria-selected] {
+    background-color: var(--cvr-card-bg) !important;
+    border: 1px solid var(--cvr-border) !important;
+    box-shadow: 0 0 4px var(--cvr-glow) !important;
+    border-radius: 8px !important;
+}
+
+/* =========================================================================
+ * 5. 订阅/分组卡片 - 选中/激活状态的高亮指示器
+ * （仅在卡片被点击选中时触发，通过内阴影 [inset] 渲染左侧高亮指示条防止布局抖动）
+ * ========================================================================= */
+.MuiBox-root[aria-selected="true"] {
+    /* 使用 inset 内阴影在框内侧绘制 4px 指示条，不改变外围 1px 边框大小以防止布局抖动，同时叠加保留外部淡绿发光 */
+    box-shadow: inset 4px 0 0 0 var(--cvr-accent-indicator), 0 0 4px var(--cvr-glow) !important;
+}
+
+/* 修正订阅卡片处于选中状态时的标题文字颜色，将其由原生的突兀蓝色覆盖为主题特有的绿色 */
+.MuiBox-root[aria-selected="true"] .MuiTypography-h6,
+.MuiBox-root[aria-selected="true"] .css-9inqwp {
+    color: var(--cvr-accent) !important;
+}
+
+/* =========================================================================
+ * 6. 扩展脚本等特殊功能卡片区块（如：全局扩展脚本 等杂项设置模块）
+ * （针对特定哈希类名的独立功能卡片进行灰底绿边的样式覆盖）
+ * ========================================================================= */
+.css-1ow8u3y {
+    background-color: var(--cvr-card-bg) !important;
+    border: 1px solid var(--cvr-border) !important;
+    box-shadow: 0 0 4px var(--cvr-glow) !important;
+    border-radius: 8px !important;
+}
+
+/* =========================================================================
+ * 7. 左侧侧边导航栏项（如：首 页、设 置 等全局菜单按钮） - 选中状态
+ * （覆盖 MUI 默认的激活蓝底，替换为清透的淡绿色背景，并配套修饰图标及文本色彩）
+ * ========================================================================= */
+.MuiListItemButton-root.Mui-selected,
+.MuiListItemButton-root.Mui-selected:hover {
+    /* 将 MUI 默认的浅蓝背景色覆盖为切合主题的淡绿色 */
+    background-color: var(--cvr-accent-bg) !important;
+}
+
+/* 同步修改导航栏选中状态下的文字与图标颜色，抹除残留的蓝色 */
+.MuiListItemButton-root.Mui-selected .MuiListItemIcon-root,
+.MuiListItemButton-root.Mui-selected .MuiListItemText-primary {
+    /* 使用主题强调色以确保在淡绿背景上的高对比度和可读性 */
+    color: var(--cvr-accent) !important;
+}
+
+/* =========================================================================
+ * 8. 状态信息徽章与功能图标底板（如：虚拟网卡模式、规则模式 等小提示方块）
+ * （去除系统默认的原色背景，统一改为透射感的浅绿色，并深度覆盖图标与文字颜色）
+ * ========================================================================= */
+.css-1hlek36,
+.css-1cht9dg,
+.css-9j8v3 {
+    /* 将原本默认的蓝色背景替换为符合主题的淡绿色 */
+    background-color: var(--cvr-accent-bg) !important;
+    /* 同步修正内部文字颜色为绿色，覆盖原有的蓝色或白色，确保视觉协调与高对比度 */
+    color: var(--cvr-accent) !important;
+}
+
+/* 同步修正该标签内的 SVG 图标颜色 */
+.css-1hlek36 .MuiSvgIcon-root,
+.css-1cht9dg .MuiSvgIcon-root,
+.css-9j8v3 .MuiSvgIcon-root {
+    color: var(--cvr-accent) !important;
+}
+
+/* =========================================================================
+ * 9. 拨动开关组件（MuiSwitch） - 开启/激活状态
+ * （拦截 MUI 全局类；将圆球强制锁为白色，滑动轨道渲染为赛博淡绿色并保持半透明度）
+ * ========================================================================= */
+.MuiSwitch-switchBase.Mui-checked {
+    /* 开关按钮（圆球）保持纯净白色，在浅色和深色模式下均适用 */
+    color: #ffffff !important;
+}
+
+.MuiSwitch-switchBase.Mui-checked+.MuiSwitch-track {
+    /* 将开关背后的轨道底色覆写为绿色，并保留半透明效果以形成"淡绿色"的视觉观感 */
+    background-color: var(--cvr-switch-track) !important;
+    opacity: var(--cvr-switch-opacity) !important;
+}
+
+/* =========================================================================
+ * 10. 顶部快捷控制按钮区块（如：节点选择 等自带深色背景方块的纯文本按钮）
+ * （抽离实心色块使其全透明融入底色，并锁定文字颜色为中性灰防止被反色吞噬）
+ * ========================================================================= */
+.css-tatee9 {
+    /* 将原本突兀的蓝色方块背景彻底改为透明，与大背景融为一体 */
+    background-color: transparent !important;
+    /* 锁定文字颜色为灰色，防止其在激活/选中状态下自动变白导致与浅色大背景融为一体难以辨认 */
+    color: var(--cvr-text-muted) !important;
+}
+
+/* =========================================================================
+ * 11. 提示信息框与说明警告区块（如：TUN 模式开启警告、预设规则说明文本栏）
+ * （赋予警示框一层柔和的淡绿荧光边框，并精准去除了强加的圆角，保留组件原本的曲率参数）
+ * ========================================================================= */
+.css-1bloydh,
+.css-iz7gzy {
+    /* 将提示框的边框改为与全局风格统一的淡绿色，并附带微弱发光 */
+    border: 1px solid var(--cvr-border) !important;
+    box-shadow: 0 0 4px var(--cvr-glow) !important;
+    /* 取消之前强制覆盖的 8px 圆角，保留各个组件自带的原本圆角弧度参数 */
+}
+
+/* 同步修正提示框内的提醒图标（SVG）颜色，使其与边框色调呼应 */
+.css-1bloydh .MuiSvgIcon-root,
+.css-iz7gzy .MuiSvgIcon-root {
+    color: var(--cvr-accent) !important;
+}
+
+/* =========================================================================
+ * 12. 文本输入框表单组件（如：用于填写订阅链接、编辑节点配置的 Input 区域）
+ * （压暗纯白的高光输入背景，使其与全局卡片的灰色系达成视觉统一）
+ * ========================================================================= */
+.MuiOutlinedInput-root {
+    /* 将原本过于亮眼的纯白色背景替换为与卡片一致的底色，增强全局质感统一 */
+    background-color: var(--cvr-input-bg) !important;
+}
+
+/* =========================================================================
+ * 13. 线性进度条组件（如：面板中展示的流量消耗进度、网络测速条等）
+ * （彻底拆解渲染层：静态底轨赋予超浅的呼吸翠绿，动态进度块赋予极高辨识度的深绿）
+ * ========================================================================= */
+.MuiLinearProgress-root {
+    /* 进度条的底轨（未填充部分）覆写为很淡的绿色，保持视觉轻盈 */
+    background-color: var(--cvr-progress-track) !important;
+}
+
+.MuiLinearProgress-bar {
+    /* 进度条的实际进度块（已填充部分）覆写为绿色，形成鲜明的进度反差 */
+    background-color: var(--cvr-progress-bar) !important;
+}
+
+/* =========================================================================
+ * 14. 代理节点列表卡片项（涵盖：剩余流量卡片、常规节点、超时Timeout节点）
+ * （拦截所有由 MUI 动态生成的列表项散列类名：.css-1d9xrv7, .css-9kkeku）
+ * ========================================================================= */
+.css-1d9xrv7,
+.css-1d9xrv7.Mui-selected,
+.css-1d9xrv7[aria-selected="true"],
+.css-1d9xrv7.Mui-disabled,
+.css-1d9xrv7[disabled],
+.css-9kkeku,
+.css-9kkeku.Mui-selected,
+.css-9kkeku[aria-selected="true"],
+.css-9kkeku.Mui-disabled,
+.css-9kkeku[disabled] {
+    /* 基础底色绝对防御：强制所有节点均坚守主题底色 */
+    background-color: var(--cvr-card-bg) !important;
+    border-radius: 8px !important;
+    margin-bottom: 8px !important;
+    /* 彻底移除 border，防止 1px 透明边框在 content-box 盒模型下无端撑大物理体积导致整体外溢 */
+    border: none !important;
+    /* 为悬浮跳动等高级交互附加平滑的过渡动画 */
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+}
+
+/* 交互增强：所有节点悬浮时的微跳动效果，并严防 Mui-selected:hover 的底色泄露 */
+.css-1d9xrv7:hover,
+.css-1d9xrv7.Mui-selected:hover,
+.css-9kkeku:hover,
+.css-9kkeku.Mui-selected:hover {
+    background-color: var(--cvr-card-bg) !important;
+    /* 整个卡片轻微上浮（跳动），带来更高级的物理交互感 */
+    transform: translateY(-1px) !important;
+}
+
+/* 悬浮阴影增强：针对未被选中的普通节点，悬浮时增加一点常规的立体弥散阴影 */
+.css-1d9xrv7:not(.Mui-selected):not([aria-selected="true"]):hover,
+.css-9kkeku:not(.Mui-selected):not([aria-selected="true"]):hover {
+    box-shadow: 0 4px 10px var(--cvr-hover-shadow) !important;
+}
+
+/* 彻底抹杀原生应用可能通过伪元素注入的蓝色选中指示条（如左侧蓝线） */
+.MuiListItemButton-root.css-1d9xrv7.Mui-selected::before,
+.MuiListItemButton-root.css-1d9xrv7[aria-selected="true"]::before,
+.MuiListItemButton-root.css-9kkeku.Mui-selected::before,
+.MuiListItemButton-root.css-9kkeku[aria-selected="true"]::before {
+    display: none !important;
+    background-color: transparent !important;
+}
+
+/* 激活状态：仅针对被选中的特定节点，点亮标志性的赛博绿边框（悬浮时依然维持绿光，不被遮蔽） */
+.MuiListItemButton-root.css-1d9xrv7.Mui-selected,
+.MuiListItemButton-root.css-1d9xrv7[aria-selected="true"],
+.MuiListItemButton-root.css-9kkeku.Mui-selected,
+.MuiListItemButton-root.css-9kkeku[aria-selected="true"] {
+    /* 极致防御：强行覆盖特定属性，精准抹杀原生样式中通过高优先级声明的 border-left-width: 3px 等带来的物理外溢变形 */
+    border: none !important;
+    border-left-width: 0 !important;
+    border-right-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    /* 放弃物理边框，改用双层 box-shadow 渲染：内层阴影(inset)向内侧画 1px 绿框（绝不占用外部物理尺寸），外层阴影画 6px 荧光发散！ */
+    box-shadow: inset 0 0 0 1px var(--cvr-node-inset), 0 0 6px var(--cvr-node-glow) !important;
+}
+
+/* =========================================================================
+ * 15. 仪表盘数据卡片（如：上传速度、下载速度、活跃连接、内核占用等统计面板）
+ * （拦截 MUI 动态生成的卡片容器散列类名：.css-eymfee, .css-1n7w8rl, .css-8tzhsh, .css-kmp0fy）
+ * ========================================================================= */
+.css-eymfee,
+.css-1n7w8rl,
+.css-8tzhsh,
+.css-kmp0fy {
+    /* 强行注入标志性的赛博绿荧光边框 */
+    border: 1px solid var(--cvr-border) !important;
+    box-shadow: 0 0 4px var(--cvr-glow) !important;
+    /* 统一圆角并锁定主题底色，与整体赛博朋克极简风格保持高度一致 */
+    border-radius: 8px !important;
+    /* background-color: var(--cvr-card-bg) !important; */
+}
+
+/* =========================================================================
+ * 16. 系统设置及常规列表面板（如：系统设置大外框）
+ * （精准拦截：仅针对内部包含子标题 .MuiListSubheader-root 的 .css-1wduhak 列表组应用发光框，
+ *   避免下拉菜单或其他普通列表被意外误伤）
+ * ========================================================================= */
+.css-1wduhak:has(.MuiListSubheader-root) {
+    /* 强行注入标志性的赛博绿荧光边框，将原本普通的列表组转化为赛博发光卡片 */
+    border: 1px solid var(--cvr-border) !important;
+    box-shadow: 0 0 4px var(--cvr-glow) !important;
+    /* 统一卡片圆角，切割边缘 */
+    border-radius: 8px !important;
+    background-color: var(--cvr-card-bg) !important;
+}
+
+/* =========================================================================
+ * 17. 全局背景图及容器穿透控制
+ * （针对底层核心容器注入背景图支持，并通过完全透明化底色，确保背景图不被遮挡）
+ *
+ * 【双模适配策略】
+ *   浅色模式容器 .css-1li7dvq 和深色模式容器 .css-l3ykv8 均设为全透明底色，
+ *   背景图接口预留在注释中，用户可按需取消注释启用。
+ *   深色容器的 color 属性可选择性启用——仅当使用了高饱和/暗色背景图时，
+ *   才需要提亮文字至白色以保障可读性。
+ * ========================================================================= */
+
+/* 核心容器层 A：浅色模式主容器（左侧导航侧边栏 或 全局大背景底板） */
+.css-1li7dvq {
+    /* [预留接口] 用户可随时取消注释以下代码来激活自定义背景图 */
+    /* background-image: url('https://pic.imgdb.cn/item/669377dbd9c307b7e9726828.png') !important; */
+
+    /* 【边界考量】强制抹除原生白色背景色（调整为全透明），实现壁纸的绝对穿透 */
+    /* background-color: var(--cvr-bg-clear) !important; */
+
+    /* 确保背景图完美铺满整个区域，自适应比例裁剪，且居中不重复 */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* 核心容器层 B：深色模式主容器（或是特定的深色模式覆盖层） */
+.css-l3ykv8 {
+    /* [预留接口] 允许为内容显示区（或深色模式下）加载特定背景图 */
+    /* background-image: url('https://pic1.imgdb.cn/item/68823f1d58cb8da5c8d74300.jpg') !important; */
+
+    /* 同样维持全透明背景，拒绝一切原生色块的无端遮挡 */
+    /* background-color: var(--cvr-bg-clear) !important; */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    /* 【设计意图】在使用暗色/花哨背景图时，可取消以下注释来强制提亮所有文字 */
+    /* color: rgb(239, 239, 239) !important; */
+}
+
+/* =========================================================================
+ * 18. 测试/规则卡片模块（如：哔哩哔哩大陆 测速卡片）
+ * （拦截测速卡片的上半部分标题区 .css-x62btt 与下半部分时间戳区 .css-skszto）
+ * ========================================================================= */
+.css-x62btt,
+.css-skszto {
+    /* 将原本可能刺眼的纯白背景改为统一的主题底色 */
+    background-color: var(--cvr-card-bg) !important;
+}
+
+/* =========================================================================
+ * 19. 配置文件选中/刷新时的加载动画遮罩层 (Loading Overlay)
+ * （去除丑陋的灰色半透明方块背景，使加载动画直接悬浮于卡片之上，极致纯净）
+ * ========================================================================= */
+/* 针对 MUI Box 渲染的遮罩：利用 :not 排除卡片内已知的正常区块（标题区、内容区、底部区） */
+.MuiBox-root[aria-selected]>.MuiBox-root:not(.css-79elbk):not(.css-i4uagw):not(.css-1b52wxr) {
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+}
+
+/* 兜底防御：拦截任何可能通过原生 div 直接注入的绝对定位遮罩层 */
+.MuiBox-root[aria-selected]>div:not(.MuiBox-root):not(.MuiLinearProgress-root) {
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+}
+
+
+/* ╔═══════════════════════════════════════════════════════════════════════════╗
+ * ║  区块 C：补全缺失规则（新增样式）                                       ║
+ * ║  ——覆盖原 CSS 中未触及的组件，消除浅色/深色模式下的视觉遗漏——           ║
+ * ╚═══════════════════════════════════════════════════════════════════════════╝ */
+
+
+/* =========================================================================
+ * 20. 全局滚动条样式优化
+ * （使用主容器后代选择器分别为浅色/深色模式定制滚动条配色，
+ *   保证在两种模式下滚动条均低调融入背景、滚动时才柔和显现）
+ * ========================================================================= */
+
+/* --- 20-A. 浅色模式滚动条 --- */
+.css-1li7dvq ::-webkit-scrollbar {
+    width: 6px !important;
+    height: 6px !important;
+    background-color: transparent !important;
+}
+
+.css-1li7dvq ::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.15) !important;
+    border-radius: 3px !important;
+}
+
+.css-1li7dvq ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.25) !important;
+}
+
+/* --- 20-B. 深色模式滚动条 --- */
+.css-l3ykv8 ::-webkit-scrollbar {
+    width: 6px !important;
+    height: 6px !important;
+    background-color: transparent !important;
+}
+
+.css-l3ykv8 ::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    border-radius: 3px !important;
+}
+
+.css-l3ykv8 ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.30) !important;
+}
+
+/* =========================================================================
+ * 21. 对话框/弹窗面板 (.MuiDialog-paper)
+ * 【关键修复】弹窗渲染在 <body> 下，无法继承主容器的 var 变量，因此直接硬编码。
+ * 同时使用 background 简写清除 MUI 在深色模式下附加的半透明渐变叠层。
+ * ========================================================================= */
+/* --- 浅色模式（默认） --- */
+.MuiDialog-paper {
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+    border: 1px solid rgba(144, 238, 144, 0.8) !important;
+}
+
+/* --- 深色模式覆盖 --- */
+body:has(.css-l3ykv8) .MuiDialog-paper {
+    background: #2E303D !important;
+    border-color: rgba(144, 238, 144, 0.65) !important;
+}
+
+/* =========================================================================
+ * 22. 下拉菜单/弹出菜单面板 (.MuiMenu-paper, .MuiPopover-paper)
+ * （同理，使用 background 简写并硬编码颜色）
+ * ========================================================================= */
+/* --- 浅色模式（默认） --- */
+.MuiMenu-paper,
+.MuiPopover-paper {
+    background: #f5f5f5 !important;
+    border: 1px solid rgba(144, 238, 144, 0.8) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+    border-radius: 8px !important;
+}
+
+/* --- 深色模式覆盖 --- */
+body:has(.css-l3ykv8) .MuiMenu-paper,
+body:has(.css-l3ykv8) .MuiPopover-paper {
+    background: #2E303D !important;
+    border-color: rgba(144, 238, 144, 0.65) !important;
+}
+
+/* 下拉菜单项悬浮时使用淡绿色高亮，与主题保持一致 */
+.MuiMenu-paper .MuiMenuItem-root:hover,
+.MuiPopover-paper .MuiMenuItem-root:hover {
+    background-color: var(--cvr-accent-bg) !important;
+}
+
+/* =========================================================================
+ * 23. 内容区背景覆盖 (.base-container, .base-content)
+ * （Clash Verge Rev 在 .base-container 上通过内联样式设置了背景色，
+ *   深色模式下为 rgb(30,31,39)。此规则确保在两种模式下均使用主题底色体系）
+ * ========================================================================= */
+/* .base-container {
+    background-color: var(--cvr-bg-clear) !important;
+} */
+
+/* =========================================================================
+ * 24. 列表子标题 (.MuiListSubheader-root) 颜色适配
+ * （子标题文字在深色模式下可能因继承了默认的深色文字而变得难以阅读）
+ * ========================================================================= */
+.css-l3ykv8 .MuiListSubheader-root {
+    /* 深色模式下提亮子标题文字至浅灰白，保障可读性 */
+    color: #c0c0c0 !important;
+}
+
+/* =========================================================================
+ * 25. 全局 Tooltip 气泡 (.MuiTooltip-tooltip)
+ * （Tooltip 在两种模式下均使用深灰底+白字的经典高对比方案，
+ *   同时附带一圈极淡的绿色光晕以呼应赛博主题）
+ * ========================================================================= */
+.MuiTooltip-tooltip {
+    background-color: #374151 !important;
+    color: #F9FAFB !important;
+    border-radius: 6px !important;
+    font-size: 12px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 4px var(--cvr-glow) !important;
+}
+
+/* =========================================================================
+ * 26. 按钮悬浮效果增强 (.MuiIconButton-root)
+ * （MUI 的 IconButton 在默认状态下悬浮时使用沉闷的灰色涟漪，
+ *   替换为极淡的绿色反馈以呼应赛博主题）
+ * ========================================================================= */
+.MuiIconButton-root:hover {
+    background-color: var(--cvr-accent-bg) !important;
+}
+
+/* =========================================================================
+ * 27. 全局分割线颜色 (.MuiDivider-root)
+ * （确保列表/面板间的分割线在两种模式下均使用极其微弱的线条，
+ *   不干扰视觉但保持结构清晰）
+ * ========================================================================= */
+.MuiDivider-root {
+    border-color: var(--cvr-divider) !important;
+}
+
+/* =========================================================================
+ * 28. 深色模式专属：全局文字颜色兜底
+ * （确保深色模式下所有 MUI Typography 组件的文字颜色不会因为继承了
+ *   浅色模式的深色字体而变得难以辨认。仅作为兜底，不会覆盖各组件自身的
+ *   精准颜色设置）
+ * ========================================================================= */
+.css-l3ykv8 .MuiTypography-root {
+    /* 深色模式下的默认文字颜色：柔和的浅灰白（不刺眼但高可读） */
+    color: #e0e0e0;
+    /* 【注意】此处故意不使用 !important，以便各组件的精准颜色设置可以正常覆盖此兜底规则 */
+}
+
+/* 深色模式下确保 SVG 图标的默认颜色也跟随提亮 */
+.css-l3ykv8 .MuiSvgIcon-root {
+    color: #c0c0c0;
+    /* 同样不使用 !important，允许各组件精准覆盖 */
+}
