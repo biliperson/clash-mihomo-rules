@@ -1,0 +1,12 @@
+# NAME: 各种额外的ai域名
+# NOTE: 2026-06-08
+payload:
+  # ==========================================
+  # 1. 沉浸式翻译 (Immersive Translate)
+  # ==========================================
+  # 针对 AI 接口域名的精确匹配（优先级最高）
+  - DOMAIN,ai.immersivetranslate.com
+  - DOMAIN,api.immersivetranslate.com
+  - DOMAIN,browser.immersivetranslate.com
+  # 针对官网及其他子域名的后缀匹配（兜底策略）
+  - DOMAIN-SUFFIX,immersivetranslate.com
