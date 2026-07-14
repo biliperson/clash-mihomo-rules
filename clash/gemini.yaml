@@ -1,5 +1,5 @@
 # NAME: Gemini
-# NOTE: 2026-05-29
+# NOTE: 2026-07-14
 # NOTE: update
 payload:
   - DOMAIN-SUFFIX,ai.google
@@ -48,3 +48,16 @@ payload:
   - PROCESS-NAME,gemini.exe
   - PROCESS-NAME,language_server_windows_x64.exe
   - PROCESS-NAME,language_server.exe
+  # ======== IP与节点纯净度检测 ========
+  - DOMAIN-SUFFIX,ippure.com
+  - DOMAIN-SUFFIX,ipinfo.io
+  - DOMAIN-SUFFIX,whoer.net
+  - DOMAIN-SUFFIX,myip.com
+  - DOMAIN-SUFFIX,ip.sb
+  - DOMAIN-SUFFIX,ping0.cc
+  - DOMAIN-SUFFIX,ipapi.co
+  - DOMAIN-SUFFIX,scamalytics.com
+  - DOMAIN-SUFFIX,browserleaks.com
+  - DOMAIN-SUFFIX,ipleak.net
+  - DOMAIN-SUFFIX,ipdata.co
+  - DOMAIN-SUFFIX,ip-api.com
